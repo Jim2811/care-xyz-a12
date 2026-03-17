@@ -1,4 +1,7 @@
+// import NavLink from "next/NavLink";
 import { FaHandHoldingHeart, FaBars } from "react-icons/fa";
+import NavLink from "./NavLink";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
@@ -15,27 +18,27 @@ export default function Navbar() {
           </div>
 
           <nav className="hidden items-center gap-8 md:flex">
-            <a className="text-sm font-medium hover:text-primary transition-colors active" href="#">
+            <NavLink className="text-sm font-medium hover:text-primary transition-colors active" href="/">
               Home
-            </a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
+            </NavLink>
+            <NavLink className="text-sm font-medium hover:text-primary transition-colors" href="/services">
               Services
-            </a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
+            </NavLink>
+            <NavLink className="text-sm font-medium hover:text-primary transition-colors" href="/about">
               About
-            </a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#">
+            </NavLink>
+            <NavLink className="text-sm font-medium hover:text-primary transition-colors" href="/my-bookings">
               My Bookings
-            </a>
+            </NavLink>
           </nav>
 
           <div className="hidden items-center gap-4 sm:flex">
-            <button className="text-sm font-semibold text-primary hover:text-primary/80">
+            <Link className="text-sm font-semibold text-primary hover:text-primary/80" href={"/register"}>
               Register
-            </button>
-            <button className="btn btn-primary rounded-lg px-6 text-sm font-bold text-white">
+            </Link>
+            <Link className="btn btn-primary rounded-lg px-6 text-sm font-bold text-white" href={"/login"}>
               Login
-            </button>
+            </Link>
           </div>
 
           <div className="dropdown dropdown-end md:hidden">
@@ -46,12 +49,12 @@ export default function Navbar() {
               tabIndex={0}
               className="menu dropdown-content z-[1] mt-3 w-56 rounded-box border border-slate-200 bg-base-100 p-2 shadow"
             >
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">My Bookings</a></li>
-              <li><a href="#">Register</a></li>
-              <li><a href="#">Login</a></li>
+              <li><NavLink href="/">Home</NavLink></li>
+              <li><NavLink href="/services">Services</NavLink></li>
+              <li><NavLink href="/about">About</NavLink></li>
+              <li><NavLink href="/my-bookings">My Bookings</NavLink></li>
+              <li><NavLink href="/register">Register</NavLink></li>
+              <li><NavLink href="/login">Login</NavLink></li>
             </ul>
           </div>
         </div>
