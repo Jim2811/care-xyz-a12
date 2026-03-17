@@ -1,26 +1,130 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+@plugin "daisyui/theme" {
+  name: "caretheme";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-primary: #0369a0;
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #e0f2fe;
+  --color-secondary-content: #0c4a6e;
+
+  --color-accent: #f5f7f8;
+  --color-accent-content: #0f172a;
+
+  --color-neutral: #1e293b;
+  --color-neutral-content: #f8fafc;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f5f7f8;
+  --color-base-300: #e2e8f0;
+  --color-base-content: #0f172a;
+
+  --color-info: #0ea5e9;
+  --color-info-content: #ffffff;
+
+  --color-success: #16a34a;
+  --color-success-content: #ffffff;
+
+  --color-warning: #f59e0b;
+  --color-warning-content: #ffffff;
+
+  --color-error: #dc2626;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+@plugin "daisyui/theme" {
+  name: "caretheme-dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: dark;
+
+  --color-primary: #0369a0;
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #082f49;
+  --color-secondary-content: #e0f2fe;
+
+  --color-accent: #0f1c23;
+  --color-accent-content: #f8fafc;
+
+  --color-neutral: #020617;
+  --color-neutral-content: #f8fafc;
+
+  --color-base-100: #0f1c23;
+  --color-base-200: #13252f;
+  --color-base-300: #1e293b;
+  --color-base-content: #f8fafc;
+
+  --color-info: #38bdf8;
+  --color-info-content: #082f49;
+
+  --color-success: #22c55e;
+  --color-success-content: #052e16;
+
+  --color-warning: #fbbf24;
+  --color-warning-content: #451a03;
+
+  --color-error: #f87171;
+  --color-error-content: #450a0a;
+
+  --radius-selector: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  font-family: "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f7f8;
+  color: #0f172a;
+}
+
+.active {
+  color: #0369a0;
+  font-weight: 700;
+  border-bottom: 1px solid #0369a0;
+  border-radius: 0;
+}
+
+.section-container {
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .section-container {
+    padding-inline: 1.5rem;
+  }
 }
