@@ -1,3 +1,4 @@
+import AuthProvider from "@/provider/AuthProvider";
 import Footer from "./Components/Footer/Footer";
 import Navbar from "./Components/Navbar/Navbar";
 import "./globals.css";
@@ -18,9 +19,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="caretheme">
       <body className={inter.className}>
-        <Navbar></Navbar>
-        {children}
-        <Footer></Footer>
+        <AuthProvider>
+          <Navbar></Navbar>
+          {children}
+          <Footer></Footer>
+        </AuthProvider>
       </body>
     </html>
   );

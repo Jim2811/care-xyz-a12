@@ -1,10 +1,83 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   FaHandHoldingHeart,
   FaGoogle,
+  FaCheckCircle,
+  FaRegCircle,
 } from "react-icons/fa";
+import useAuth from "@/hooks/useAuth";
 
 export default function RegisterPage() {
+  const { createUser, signInWithGoogle } = useAuth();
+  const router = useRouter();
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = e.target;
+    const fullName = form.fullName.value;
+    const nid = form.nid.value;
+    const email = form.email.value;
+    const contact = form.contact.value;
+    const password = form.password.value;
+    const terms = form.terms.checked;
+
+    console.log({ fullName, nid, email, contact, password, terms });
+
+    if (!terms) {
+      setError("You must accept the terms and privacy policy.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
+    try {
+      const result = await createUser(email, password);
+      console.log("Registered user:", result.user);
+
+      setSuccess("Account created successfully!");
+      form.reset();
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError("");
+    setSuccess("");
+
+    try {
+      const result = await signInWithGoogle();
+      console.log("Google user:", result.user);
+
+      setSuccess("Google sign up successful!");
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200">
       <div className="flex min-h-screen items-center justify-center px-6 py-12 lg:px-20 xl:px-32">
@@ -34,7 +107,10 @@ export default function RegisterPage() {
           </header>
 
           <div className="mt-8">
-            <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50">
+            <button
+              onClick={handleGoogleSignUp}
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+            >
               <FaGoogle className="text-lg text-[#4285F4]" />
               Sign up with Google
             </button>
@@ -50,21 +126,22 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <form className="space-y-5">
+            <form onSubmit={handleRegister} className="space-y-5">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label
-                    htmlFor="full-name"
+                    htmlFor="fullName"
                     className="block text-sm font-medium text-slate-700"
                   >
                     Full Name
                   </label>
                   <input
-                    id="full-name"
-                    name="full-name"
+                    id="fullName"
+                    name="fullName"
                     type="text"
                     placeholder="John Doe"
                     className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
                   />
                 </div>
 
@@ -81,6 +158,7 @@ export default function RegisterPage() {
                     type="text"
                     placeholder="1234567890"
                     className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
                   />
                 </div>
               </div>
@@ -98,6 +176,7 @@ export default function RegisterPage() {
                   type="email"
                   placeholder="john@example.com"
                   className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  required
                 />
               </div>
 
@@ -114,6 +193,7 @@ export default function RegisterPage() {
                   type="tel"
                   placeholder="+1 (555) 000-0000"
                   className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  required
                 />
               </div>
 
@@ -130,9 +210,31 @@ export default function RegisterPage() {
                   type="password"
                   placeholder="••••••••"
                   className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  required
                 />
 
-                
+                <div className="mt-3 space-y-2">
+                  <p className="text-xs text-slate-500">
+                    Must include at least:
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <FaCheckCircle className="text-[14px] text-green-500" />
+                      6+ characters
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <FaRegCircle className="text-[14px] text-slate-300" />
+                      1 uppercase letter
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <FaRegCircle className="text-[14px] text-slate-300" />
+                      1 lowercase letter
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-start">
@@ -156,6 +258,18 @@ export default function RegisterPage() {
                   </Link>
                 </label>
               </div>
+
+              {error && (
+                <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </p>
+              )}
+
+              {success && (
+                <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-600">
+                  {success}
+                </p>
+              )}
 
               <button
                 type="submit"

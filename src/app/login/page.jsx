@@ -1,12 +1,71 @@
-import Link from "next/link";
-import { FaHandHoldingHeart, FaGoogle, FaEnvelope, FaLock } from "react-icons/fa";
+"use client";
 
-export const metadata = {
-  title: "Login | Care.xyz",
-  description: "Login to your Care.xyz account",
-};
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  FaHandHoldingHeart,
+  FaGoogle,
+  FaEnvelope,
+  FaLock,
+} from "react-icons/fa";
+import useAuth from "@/hooks/useAuth";
+
+// export const metadata = {
+//   title: "Login | Care.xyz",
+//   description: "Login to your Care.xyz account",
+// };
 
 export default function LoginPage() {
+  const { signInUser, signInWithGoogle } = useAuth();
+  const router = useRouter();
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      const result = await signInUser(email, password);
+      console.log("Logged in user:", result.user);
+
+      setSuccess("Login successful!");
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError("");
+    setSuccess("");
+
+    try {
+      const result = await signInWithGoogle();
+      console.log("Google login user:", result.user);
+
+      setSuccess("Google login successful!");
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200">
       <div className="flex min-h-screen items-center justify-center px-6 py-12 lg:px-20 xl:px-32">
@@ -36,7 +95,10 @@ export default function LoginPage() {
           </header>
 
           <div className="mt-8">
-            <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50">
+            <button
+              onClick={handleGoogleLogin}
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+            >
               <FaGoogle className="text-lg text-[#4285F4]" />
               Continue with Google
             </button>
@@ -52,7 +114,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <form className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-5">
               <div>
                 <label
                   htmlFor="email"
@@ -71,6 +133,7 @@ export default function LoginPage() {
                     type="email"
                     placeholder="john@example.com"
                     className="block w-full rounded-lg border border-slate-300 bg-white py-3 pl-11 pr-4 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
                   />
                 </div>
               </div>
@@ -102,6 +165,7 @@ export default function LoginPage() {
                     type="password"
                     placeholder="••••••••"
                     className="block w-full rounded-lg border border-slate-300 bg-white py-3 pl-11 pr-4 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
                   />
                 </div>
               </div>
@@ -115,6 +179,18 @@ export default function LoginPage() {
                   Remember me
                 </label>
               </div>
+
+              {error && (
+                <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {error}
+                </p>
+              )}
+
+              {success && (
+                <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-600">
+                  {success}
+                </p>
+              )}
 
               <button
                 type="submit"
